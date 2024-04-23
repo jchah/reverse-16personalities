@@ -1,5 +1,4 @@
 import os
-import random
 
 
 class Question:
@@ -8,27 +7,21 @@ class Question:
         self.trait = trait
 
 
-def ask_questions(file_name, generate, new_file):
+def ask_questions(file_name):
     questions = load_questions(file_name)
     answers = []
     for question in questions:
         while True:
             try:
-                if generate:
-                    response = random.randint(-3, 3) if generate else int(input("Answer (-3 to 3):"))
-                else:
-                    print(question.text)
-                    response = int(input("Response from -3 to 3: "))
+                print(question.text)
+                response = int(input("Response from -3 to 3: "))
                 if not -3 <= response <= 3:
                     raise ValueError("Response must be between -3 and 3.")
                 answers.append(response)
                 break
             except ValueError as e:
                 print(f"Invalid input: {e}")
-    if new_file:
-        filename = generate_filename('responses.txt')
-    else:
-        filename = "response_1"
+    filename = generate_filename('responses.txt')
     with open(filename, 'w') as file:
         file.write(','.join(map(str, answers)))
     return filename
@@ -97,7 +90,7 @@ def compile_data(traits_scores, questions_list):
 
 def main():
     personality_strings = []
-    responses_filename = ask_questions('questions.txt', 1, 0)
+    responses_filename = ask_questions('questions.txt')
     questions = load_questions('questions.txt')
     traits_scores, personality_string = read_answers(responses_filename, questions)
     personality_strings.append(personality_string)
